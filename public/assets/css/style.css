@@ -1,0 +1,29 @@
+.burger-container{
+  display: grid;
+  grid-template-columns: 15% 70% 15%;
+  margin: 10px auto;
+  max-width: 80%;
+}
+
+.margin>img{
+  width: 100%;
+}
+
+.header {
+  text-align: center;
+}
+
+.burger-form{
+  text-align: center;
+}
+
+.burger-form>button{
+  margin: 0px 5px;
+}
+
+.table {
+  text-align: center;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  height: 90%;
+}

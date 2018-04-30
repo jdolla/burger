@@ -1,47 +1,67 @@
 const query = require('./connection.js');
 
-function Burger(burgerInfo) {
-  this.id = burgerInfo.id;
-  this.name = burgerInfo.burger_name;
-  this.devoured = burgerInfo.devoured || false;
-  this.createdAt = burgerInfo.createdAt || Date.now();
+const selectAll = async function (cols, tbl) {
+  const queryAll = `Select ?? From ??;`;
+  return await query(queryAll, [cols, tbl]);
+};
+
+const selectOne = async function (cols, tbl, id) {
+  const queryOne = `
+    Select ??
+    From ??
+    Where id = ?
+  `;
+  return await query(queryOne, [cols, tbl, id]);
 }
 
-const selectAll = async function () {
+const insertOne = async function(colVal, tbl) {
 
-  const queryAll = `
-      Select b.id, b.burger_name, b.devoured, b.createdAt
-      From burgers as b limit 1;
-    `;
+  const queryInsert = `
+    insert ${tbl}
+    set ?;
+  `;
 
-  const results = await query(queryAll);
+  return await query(queryInsert, colVal);
+};
 
-  return results.map(burger => {
-    return new Burger(burger)
-  });
-
+const updateOne = async function(colVal, tbl, id){
+  const queryUpdate = `
+    update ??
+    set ?
+    where id = ?
+  `;
+  return await query(queryUpdate, [tbl, colVal, id]);
 }
 
-const insertOne = async function (burger) {
-  queryInsert = `
-      insert burgers
-      set ?;
-    `;
 
-  const vals = {
-    burger_name: burger.name,
-    devoured: burger.devoured,
-    createdAt: burger.createdAt
-  };
+module.exports = {
+  selectAll,
+  insertOne,
+  selectOne,
+  updateOne
+};
 
-  const results = await query(queryInsert, vals);
 
-  return results;
-}
+// const insertOne = async function (attributes, tbl) {
+//   queryInsert = `
+//       insert burgers
+//       set ?;
+//     `;
 
-const updateOne = function () {
+//   const vals = {
+//     burger_name: burger.name,
+//     devoured: burger.devoured,
+//     createdAt: burger.createdAt
+//   };
 
-}
+//   const results = await query(queryInsert, vals);
+
+//   return results;
+// }
+
+// const updateOne = function () {
+
+// }
 
 // module.exports = {
 //   selectAll,
@@ -49,11 +69,10 @@ const updateOne = function () {
 //   updateOne
 // };
 
-const myBurger = new Burger({ burger_name: "jason burger" });
 
-insertOne(myBurger).then(x => {
-  console.log(x);
-}).catch(x => {
-  console.log(x);
-  console.log('none')
-});
+// insertOne(myBurger).then(x => {
+//   console.log(x);
+// }).catch(x => {
+//   console.log(x);
+//   console.log('none')
+// });
