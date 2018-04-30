@@ -10,19 +10,61 @@ router.get('/', (req, res) => {
 });
 
 router.get('/all', (req, res) => {
-  res.end('ALL');
+  burger.all()
+    .then( burgers => {
+      res.json(burgers);
+    })
+    .catch( e => {
+      console.log(e);
+      res.status(500).end('No Burgers For You');
+    });
 });
 
 router.get('/burger/:id', (req, res) => {
-  res.end('Single Burger')
+  const burgerId = parseInt(req.params.id);
+  burger.single(burgerId)
+    .then( burger => {
+      res.json(burger);
+    })
+    .catch( e => {
+      console.log(e);
+      res.status(500).end('Unable to fetch burger');
+    })
 });
 
 router.post('/burger', (req, res) => {
-  res.end('New Burger');
+
+  const burgerName = req.body.name.toString();
+  burger.create(burgerName)
+    .then( newBurger => {
+      res.json(newBurger);
+    })
+    .catch( e => {
+      console.log(e);
+      res.status(500).end('There was a problem creating your burger.');
+    });
 });
 
 router.put('/burger/:id', (req, res) => {
-  res.end('Burger updated');
+  const burgerId = req.params.id;
+  if(!burgerId){
+    return res.status(500).end('Invalid Argument');
+  };
+
+  const trgtBurger = {
+    burger_name: req.body.name.toString(),
+    devoured: req.body.devoured == true,
+    id: burgerId
+  }
+
+  burger.update(trgtBurger)
+    .then( updatedBurger => {
+      res.json(trgtBurger);
+    })
+    .catch( e => {
+      console.log(e);
+      res.status(500).end('Unable to update that burger.')
+    })
 });
 
 module.exports = router;

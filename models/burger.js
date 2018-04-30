@@ -10,6 +10,14 @@ const burgerCols = [
 ];
 
 const burger = {
+  single: async function (id) {
+    return await orm.selectOne(
+      burgerCols,
+      burgerTbl,
+      id
+    );
+  },
+
   all: async function () {
     return orm.selectAll(burgerCols, burgerTbl);
   },
@@ -29,12 +37,12 @@ const burger = {
   },
 
   update: async function (burger) {
-     var colVal = {
+    var colVal = {
       burger_name: burger.burger_name,
       devoured: burger.devoured
     }
 
-    const result = await orm.updateOne (
+    const result = await orm.updateOne(
       colVal,
       burgerTbl,
       burger.id
