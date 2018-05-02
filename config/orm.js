@@ -11,7 +11,8 @@ const selectOne = async function (cols, tbl, id) {
     From ??
     Where id = ?
   `;
-  return await query(queryOne, [cols, tbl, id]);
+  const result = await query(queryOne, [cols, tbl, id]);
+  return result[0];
 }
 
 const insertOne = async function(colVal, tbl) {

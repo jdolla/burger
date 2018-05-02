@@ -21,6 +21,29 @@ router.get('/all', (req, res) => {
 });
 
 router.get('/burger/:id', (req, res) => {
+  if(req.params.id.toLowerCase() === 'all'){
+    burger.all()
+      .then( burgers => {
+        const readyBurgers = burgers.filter( burger => {
+          return burger.devoured == false;
+        });
+
+        const devouredBurgers = burgers.filter( burger => {
+          return burger.devoured == true;
+        })
+
+        res.render("hall-of-fame", {
+          readyBurgers,
+          devouredBurgers
+        });
+      })
+      .catch( e => {
+        console.log(e);
+        res.status(500).end('No Burgers For You');
+      });
+    return true;
+  }
+
   const burgerId = parseInt(req.params.id);
   burger.single(burgerId)
     .then( burger => {
@@ -33,7 +56,6 @@ router.get('/burger/:id', (req, res) => {
 });
 
 router.post('/burger', (req, res) => {
-
   const burgerName = req.body.name.toString();
   burger.create(burgerName)
     .then( newBurger => {
@@ -48,7 +70,6 @@ router.post('/burger', (req, res) => {
 router.put('/burger/:id', (req, res) => {
   const burgerId = req.params.id;
   if(!burgerId){
-    return res.status(500).end('Invalid Argument');
   };
 
   const trgtBurger = {
@@ -63,8 +84,8 @@ router.put('/burger/:id', (req, res) => {
     })
     .catch( e => {
       console.log(e);
-      res.status(500).end('Unable to update that burger.')
-    })
+      res.status(500).json('Failed to update burer');
+    });
 });
 
 module.exports = router;
